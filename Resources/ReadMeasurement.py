@@ -157,7 +157,7 @@ def cleanup_config_csv(csv_dict, metadata):
 #     return csv_dict, n_config, n_cycles
 
 
-def import_TA_measurement(filedict, all_frames = False):
+def import_TA_measurement(filedict, all_frames = False, n_cycles_cheat = -1):
     
     # import XML file 
     paf = filedict["basepath"] + filedict["basefilename"] + ".xml"
@@ -176,6 +176,10 @@ def import_TA_measurement(filedict, all_frames = False):
     paf = filedict["basepath"] + filedict["basefilename"] + "_execution_log.csv"
     mess_details = CSV.CSVReader(paf).read_csv()    
     mess_details, n_config, n_cycles = cleanup_log_csv(mess_details)
+    
+    if n_cycles_cheat > 0:
+        n_cycles = n_cycles_cheat
+    
     
     n_states = len(mess_details[0]["image"])
     metadata["n_cycles"] = n_cycles
@@ -202,6 +206,8 @@ def import_TA_measurement(filedict, all_frames = False):
 
     metadata["n_ypix"] = shape[0]
     metadata["n_xpix"] = shape[1]
+    
+#     print(metadata)
 
     mess = numpy.zeros((n_cycles, n_config, n_states, n_frames, metadata["n_ypix"], metadata["n_xpix"]))
 
@@ -242,7 +248,8 @@ def import_TA_measurement(filedict, all_frames = False):
             
 #                     print(cycle, config, cyco, state)
 
-                    paf = filedict["basepath"] + mess_details[cyco]["image"][state]            
+                    paf = filedict["basepath"] + mess_details[cyco]["image"][state]    
+#                     print(paf)        
                     temp = TIFF.TiffReader(paf)
                     mess[cycle, config, state, 0, :, :] = temp.get_image()
         

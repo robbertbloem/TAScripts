@@ -47,9 +47,10 @@ class TA_Measurement(CT.ClassTools):
         
         self.filedict = {"path": path, "date": date, "time": time, "basename": basename, "basepath": basepath, "basefilename": basefilename}
         
+#         print(self.filedict)
 
-    def import_data(self, all_frames = False):
-        self.mess, metadata = RM.import_TA_measurement(self.filedict, all_frames)
+    def import_data(self, all_frames = False, n_cycles_cheat = -1):
+        self.mess, metadata = RM.import_TA_measurement(self.filedict, all_frames, n_cycles_cheat = n_cycles_cheat)
         self.extract_metadata(metadata)
 
 
